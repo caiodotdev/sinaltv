@@ -1,0 +1,20 @@
+{% load static %}
+{% load i18n %}
+
+<div id="loading" class="modal" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row modal-title">
+                    <p class="modal-text">Loading ...</p>
+                </div>
+                <div class="row">
+                    <div class="text-center">
+                        <img src="{% static "default/loader.gif" %}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

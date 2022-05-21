@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load form_utils %}
+{% block content %}
+    <div id="top" class="row">
+        <div class="col-sm-3 col-xs-12">
+            <h2> {{ model_name_plural }}</h2>
+        </div>
+        <div class="col-sm-9 col-xs-12">
+        </div>
+    </div> <!-- /#top -->
+    <hr/>
+    <div class="row">
+        <div class="box-body">
+            <div class="row">
+                {% for canal in canais %}
+                    <div class=" text-center col-xs-6 col-sm-4 col-md-3"
+                         data-toggle="tooltip" data-placement="bottom" title="{{ canal.title }}">
+                        <div class="box box-default" style="border-top: None;">
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                {#                                <a href="{% url 'FUTEMAX_detail' %}?uri={{ canal.pk }}">#}
+                                {#                                    <img src="{{ canal.img_url }}"#}
+                                {#                                         class="img-responsive img-thumbnail"#}
+                                {#                                         style="background-color: #1a2226;width: 249px;height: 140px;"#}
+                                {#                                    />#}
+                                {#                                </a>#}
+                                <a href="{{ canal.pk }}" target="_blank">
+                                    <img src="{{ canal.img_url }}"
+                                         class="img-responsive img-thumbnail"
+                                         style="background-color: #1a2226;width: 249px;height: 140px;"
+                                    />
+                                </a>
+                            </div>
+                            <!-- /.box-body -->
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+
+    </script>
+
+{% endblock %}

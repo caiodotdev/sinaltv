@@ -1,0 +1,155 @@
+﻿{% extends 'base.html' %}
+{% load static %}
+{% load form_utils %}
+{% block content %}
+
+    <div class="row">
+        <div class="col-sm-3 col-xs-12">
+            <h2> {{ model_name_plural }}</h2>
+        </div>
+        <div class="col-sm-9 col-xs-12">
+
+            <button id="get_channels" type="button" class="btn btn-info pull-right h2"><i
+                    class="fa fa-rocket"></i> Get Channels
+            </button>
+            <button id="get_m3u8" type="button" class="btn btn-info pull-right h2"><i
+                    class="fa fa-tv"></i> Get M3U8
+            </button>
+            {#            <a href="{% url 'delete_all_channels' %}" class="btn btn-danger pull-right h2"><i#}
+            {#                    class="fa fa-trash"></i> Delete All#}
+            {#            </a>#}
+        </div>
+    </div> <!-- /#top -->
+    <hr/>
+
+    <div class="row">
+        {% for channel in channels %}
+            <div class="col-md-2 col-sm-4 col-xs-6">
+                <div class="panel panel-default">
+                    <div class="panel-body text-center">
+                        <div class="row text-center">
+                            <div class="col-xs-12">
+                                <a href="{% url 'CHANNEL_detail' channel.pk %}"><img src="{{ channel.image }}"
+                                                                                     class="img-responsive"
+                                                                                     style="height: 120px; width: 100%"/>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <p>{{ channel.title|truncatechars:16 }}</p>
+                        </div>
+
+
+                    </div>
+                    <div class="panel-footer text-center">
+                        {% if channel.link_m3u8 and user.username == 'caio' %}
+                            <button id="cast_{{ channel.pk }}">Cast</button>
+                            <script>
+                                $('#cast_{{ channel.pk }}').on('click', function () {
+                                    if (cjs.available) {
+                                        cjs.cast("http://10.0.0.196{% url 'playlist_m3u8' %}?id={{ channel.id }}", {
+                                            poster: '{{ channel.image }}',
+                                            title: '{{ channel.title }}'
+                                        });
+                                    }
+                                });
+                            </script>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <script src="{% static 'default/js/cast.js' %}"></script>
+    <script type="text/javascript">
+        function debug(msg) {
+            var d = new Date();
+            var n = d.toLocaleTimeString().split(' ')[0]
+            if (typeof msg === 'string') {
+                console.log('[' + n + '] ' + msg + '\n')
+            } else {
+                console.log('[' + n + '] ' + JSON.stringify(msg) + '\n')
+            }
+        }
+
+        debug('debugging\t: enabled')
+
+        var cjs = new Castjs();
+
+        cjs.on('event', (e) => {
+            if (e === 'statechange') {
+                debug(e + '\t: ' + cjs.state)
+            } else if (e === 'volumechange') {
+                debug(e + '\t: ' + cjs.volumeLevel)
+            } else if (e === 'timeupdate') {
+                // debug(e + '\t: ' + cjs.timePretty + ' - ' + cjs.durationPretty)
+            } else if (e === 'playing') {
+                debug(e + '\t: ' + cjs.title)
+            } else if (e === 'connect') {
+                debug(e + '\t: ' + cjs.device)
+            } else if (e === 'available') {
+                debug(e + '\t: castjs ' + cjs.version)
+            } else if (e === 'buffering') {
+                debug(e + '\t: ' + cjs.timePretty)
+            } else if (e === 'mute') {
+                debug(e + '\t\t: ' + cjs.volumeLevel)
+            } else if (e === 'unmute') {
+                debug(e + '\t: ' + cjs.volumeLevel)
+            } else if (e === 'pause') {
+                debug(e + '\t\t: ' + cjs.timePretty)
+            } else if (e === 'disconnect') {
+                debug(e + '\t: ' + cjs.device)
+            } else if (e === 'subtitlechange') {
+                for (var i in cjs.subtitles) {
+                    if (cjs.subtitles[i].active) {
+                        debug('subtitle\t: ' + cjs.subtitles[i].label)
+                        break;
+                    }
+                }
+            } else {
+                debug(e)
+            }
+        });
+
+        cjs.on('available', () => {
+            console.log('available\t: TRUE')
+        })
+
+        cjs.on('error', (err) => {
+            debug('error\t\t: ' + err)
+        })
+
+        $(document).ready(function () {
+            $('#channel_link').addClass('active');
+
+            $('#get_channels').click(function () {
+                $('#loading').show();
+                $.get("{% url 'get_channels' %}", function (data) {
+                    console.log('Getting channels ...');
+                }).done(function (data) {
+                    $('#loading').hide();
+                    window.location.href = '';
+                    console.log(data);
+                }).fail(function () {
+                    $('#loading').hide();
+                });
+            });
+
+            $('#get_m3u8').click(function () {
+                $('#loading').show();
+                $.get("{% url 'get_channels_m3u8' %}", function (data) {
+                    console.log('Getting channels m3u8 for all ...');
+                }).done(function (data) {
+                    $('#loading').hide();
+                    window.location.href = '';
+                    console.log(data);
+                }).fail(function () {
+                    $('#loading').hide();
+                });
+            });
+
+        });
+    </script>
+
+{% endblock %}

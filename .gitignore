@@ -1,0 +1,12 @@
+# Created by .ignore support plugin (hsz.mobi)
+tmp
+venv
+*.pyc
+staticfiles
+.env
+../.idea/
+.sqlite3
+.idea/
+/.idea/
+.log
+*.log

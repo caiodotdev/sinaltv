@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    
+    <section class="content-header">
+      <h1>
+        404 Error Page
+      </h1>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="error-page">
+        <h2 class="headline text-yellow"> 404</h2>
+
+        <div class="error-content">
+          <h3><i class="fa fa-warning text-yellow"></i> Oops! Pagina nao encontrada.</h3>
+            
+                <p>
+                    Não conseguimos encontrar a página que estava procurando.
+                     Enquanto isso, você pode <a href="#"> retornar  </a>.
+                </p>
+
+        </div>
+        <!-- /.error-content -->
+      </div>
+      <!-- /.error-page -->
+    </section>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btn_cancelar').click(function () {
+                return window.history.back();
+            });
+        });
+    </script>
+
+{% endblock %}

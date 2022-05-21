@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load form_utils %}
+{% block content %}
+    <h3 class="page-header">Register</h3>
+
+    <form action="" method="post">{% csrf_token %}
+        {{ form.as_p }}
+        <div class="row">
+            <button type="submit" class="btn btn-primary btn-block btn-flat"> {% trans 'Register' %}</button>
+            <a class="btn btn-default btn-block btn-flat"
+               href="javascript:window.history.back()"> {% trans 'Back' %}</a>
+        </div>
+    </form>
+{% endblock %}
